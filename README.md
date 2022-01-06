@@ -20,8 +20,8 @@ ScoreBoardAPI::setScoreLine(Player, int $line, string);
 ScoreBoardAPI::getLineScore(Player, $line;
 ```
 ## To edit a line
+https://www.php.net/manual/fr/function.str-replace.php
 ```PHP
-# https://www.php.net/manual/fr/function.str-replace.php
 ScoreBoardAPI::editLineScore(Player, $mine, $replace, $subject);
 ```
 
