@@ -86,7 +86,7 @@ class ScoreBoardAPI{
         }
 
         if(self::isLineValid($line)){
-            throw new \OutOfBoundsException("$line is out of range, expected value between " . 1 . " and " . 15);
+            throw new \OutOfBoundsException("$line isn't between 1 and 15");
         }
 
         $entry = new ScorePacketEntry;
@@ -116,7 +116,7 @@ class ScoreBoardAPI{
             throw new \BadFunctionCallException("Cannot get the line : the player's scoreboard has not been found");
         }
         if(self::isLineValid(($line)){
-            throw new \OutOfBoundsException("$line is out of range, expected value between " . 1 . " and " . 15);
+            throw new \OutOfBoundsException("$line isn't between 1 and 15");
         }
 
         return self::$lineScore[strtolower($player->getName())[$line]];
@@ -134,7 +134,7 @@ class ScoreBoardAPI{
             throw new \BadFunctionCallException("Cannot edit the line : the player's scoreboard has not been found");
         }
         if(self::isLineCorrect($line)){
-            throw new \OutOfBoundsException("$line is out of range, expected value between " . 1 . " and " . 15);
+            throw new \OutOfBoundsException("$line isn't between 1 and 15");
         }
 
         self::removeLine($player, $line);
