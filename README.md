@@ -12,7 +12,7 @@ ScoreBoardAPI::sendScore(Player, "anyname");
 
 ## add lines and fill it with text
 ```php
-ScoreBoardAPI::setScoreLine(Player, int $line, string);
+ScoreBoardAPI::setScoreLine(Player, $line, string);
 ```
 
 ## You can get the text that is located in the line of the scoreboard of the player you entered the function
@@ -22,7 +22,7 @@ ScoreBoardAPI::getLineScore(Player, $line;
 ## To edit a line
 https://www.php.net/manual/fr/function.str-replace.php
 ```PHP
-ScoreBoardAPI::editLineScore(Player, $mine, $replace, $subject);
+ScoreBoardAPI::editLineScore(Player, $line, $replace, $subject);
 ```
 
 ## To delete a single ligne
