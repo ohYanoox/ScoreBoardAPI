@@ -36,4 +36,4 @@ ScoreBoardAPI::removeScore($player);
 ```
 
 ## There you go! you can now create in any circumstance and modify scoreboards to the player
-have a nice day :)
+have a nice day ;)
