@@ -1,8 +1,8 @@
 # ScoreBoardAPI
-ScoreBoardAPI is a PocketMine-MP API that eases creating and managing scorehud**
+**SoreBoardAPI is a PocketMine-MP  4.0.0 API that eases creating and managing scorehud**
 
 ## SETUP
-Only put the api in the src of your plugin
+**Only put the api in the src of your plugin**
 
 ## Sending a scoreboard to player
 
