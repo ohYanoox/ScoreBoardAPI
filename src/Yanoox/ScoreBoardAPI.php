@@ -82,10 +82,10 @@ class ScoreBoardAPI{
             return;
         }
         if (!self::hasScore($player)){
-            throw new \BadFunctionCallException("The player's scoreboard has not been found, he may not have a scoreboard");
+            throw new \BadFunctionCallException("Cannot set the line : the player's scoreboard has not been found");
         }
 
-        if(self::isLineCorrect($line)){
+        if(self::isLineValid($line)){
             throw new \OutOfBoundsException("$line is out of range, expected value between " . 1 . " and " . 15);
         }
 
@@ -113,9 +113,9 @@ class ScoreBoardAPI{
      */
     public static function getLineScore(Player $player, int $line) : string{
         if (!self::hasScore($player)){
-            throw new \BadFunctionCallException("Cannot get a score line from a player without a scoreboard");
+            throw new \BadFunctionCallException("Cannot get the line : the player's scoreboard has not been found");
         }
-        if(self::isLineCorrect($line)){
+        if(self::isLineValid(($line)){
             throw new \OutOfBoundsException("$line is out of range, expected value between " . 1 . " and " . 15);
         }
 
@@ -131,7 +131,7 @@ class ScoreBoardAPI{
      */
     public static function editLineScore(Player $player, int $line, string $replace, string|float $subject){
         if (!isset(self::$lineScore[strtolower($player->getName())[$line]]) or !self::hasScore($player)){
-            throw new \BadFunctionCallException("Cannot remove a score to a player without a scoreboard");
+            throw new \BadFunctionCallException("Cannot edit the line : the player's scoreboard has not been found");
         }
         if(self::isLineCorrect($line)){
             throw new \OutOfBoundsException("$line is out of range, expected value between " . 1 . " and " . 15);
@@ -207,7 +207,7 @@ class ScoreBoardAPI{
         return isset(self::$scoreboards[strtolower($player->getName())]);
     }
 
-    public static function isLineCorrect(int $line): bool
+    public static function isLineValid(int $line): bool
     {
         return $line < 1 || $line > 15;
     }
