@@ -1,6 +1,7 @@
 --- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/ohYanoox/ScoreBoardAPI
-build-by-default: true
 branches:
-- main
+- "4.0.0"
+- "ScoreBoard"
+- "api"
 projects: []
 ...
