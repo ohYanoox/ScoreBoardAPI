@@ -30,6 +30,11 @@ ScoreBoardAPI::editLineScore(Player, $mine, $replace, $subject);
 ScoreBoardAPI::removeLine(Player, $line);
 ```
 
+## To check if the player has a scoreboard
+```PHP
+ScoreBoardAPI::hasScore(Player)
+```
+
 ## To remove the player's scoreboard
 ```PHP
 ScoreBoardAPI::removeScore($player);
