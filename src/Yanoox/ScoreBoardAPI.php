@@ -115,9 +115,9 @@ class ScoreBoardAPI{
         if (!self::hasScore($player)){
             throw new \BadFunctionCallException("Cannot get the line : the player's scoreboard has not been found");
         }
-        if(self::isLineValid(($line)){
-            throw new \OutOfBoundsException("$line isn't between 1 and 15");
-        }
+        if(self::isLineValid($line)){
+        throw new \OutOfBoundsException("$line isn't between 1 and 15");
+    }
 
         return self::$lineScore[strtolower($player->getName())[$line]];
     }
@@ -129,11 +129,11 @@ class ScoreBoardAPI{
      * @param string|float $subject
      * @return void
      */
-    public static function editLineScore(Player $player, int $line, string $replace, string|float $subject){
+    public static function editLineScore(Player $player, int $line, string $search, string|float $replace){
         if (!isset(self::$lineScore[strtolower($player->getName())[$line]]) or !self::hasScore($player)){
             throw new \BadFunctionCallException("Cannot edit the line : the player's scoreboard has not been found");
         }
-        if(self::isLineCorrect($line)){
+        if(self::isLineValid($line)){
             throw new \OutOfBoundsException("$line isn't between 1 and 15");
         }
 
@@ -141,7 +141,7 @@ class ScoreBoardAPI{
 
         $entry = new ScorePacketEntry();
         $entry->objectiveName = self::$scoreboards[strtolower($player->getName())] ?? "objective";
-        $entry->customName = str_replace($replace, $subject, self::getLineScore($player, $line));
+        $entry->customName = str_replace($search, $replace, self::getLineScore($player, $line));
         $entry->score = $line;
         $entry->scoreboardId = $line;
         $entry->type = $entry::TYPE_FAKE_PLAYER;
@@ -150,7 +150,7 @@ class ScoreBoardAPI{
         $packet->type = SetScorePacket::TYPE_CHANGE;
         $packet->entries[] = $entry;
 
-        self::$lineScore[strtolower($player->getName())[$line]] = str_replace($replace, $subject, self::getLineScore($player, $line));
+        self::$lineScore[strtolower($player->getName())[$line]] = str_replace($search, $replace, self::getLineScore($player, $line));
 
         $player->getNetworkSession()->sendDataPacket($packet);
     }
