@@ -77,7 +77,7 @@ class ScoreBoardAPI{
      * @param int $type
      * @return void
      */
-    public static function setScoreLine(Player $player, int $line, string $message, int $type = ScorePacketEntry::TYPE_FAKE_PLAYER): void{
+    public static function setScoreLine(Player $player, int $line, string|float $message, int $type = ScorePacketEntry::TYPE_FAKE_PLAYER): void{
         if (!$player->isConnected()){
             return;
         }
@@ -129,7 +129,7 @@ class ScoreBoardAPI{
      * @param string|float $subject
      * @return void
      */
-    public static function editLineScore(Player $player, int $line, string $search, string|float $replace){
+    public static function editLineScore(Player $player, int $line, string|float $search, string|float $replace){
         if (!isset(self::$lineScore[strtolower($player->getName())[$line]]) or !self::hasScore($player)){
             throw new \BadFunctionCallException("Cannot edit the line : the player's scoreboard has not been found");
         }
