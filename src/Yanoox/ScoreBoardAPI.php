@@ -136,6 +136,7 @@ class ScoreBoardAPI{
         if(self::isLineValid($line)){
             throw new \OutOfBoundsException("$line isn't between 1 and 15");
         }
+        self::removeLine($player, $line);
 
         $entry = new ScorePacketEntry();
         $entry->objectiveName = self::$scoreboards[strtolower($player->getName())] ?? "objective";
