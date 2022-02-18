@@ -34,14 +34,14 @@ class ScoreBoardAPI implements Listener {
      *
      * @var string[]
      */
-    public static array $scoreboards;
+    public static array $scoreboards = [];
 
     /**
      * Contains strings containing in each line the player's score (if he has one)
      *
      * @var string[]
      */
-    public static array $lineScore;
+    public static array $lineScore = [];
 
     /**
      * Add a scoreboard to player, this option is mandatory: you can't set a score to a player without a scoreboard
