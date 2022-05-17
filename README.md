@@ -4,40 +4,50 @@
 ## SETUP
 **Only put the api in the src of your plugin and use it :)**
 
+## Get an instance of your api
+```php
+$api = ScoreBoardAPI::getInstance();
+```
 ## Sending a scoreboard to player
 
 ```php
-ScoreBoardAPI::sendScore(Player, "anyname");
+$api->sendScore(Player, "anyname");
 ```
 
 ## add lines and fill it with text
 ```php
-ScoreBoardAPI::setScoreLine(Player, $line, string);
+$api->setScoreLine(Player, $line, int);
+//or if you've got an array you can put all your lines in this function
+$lines = [
+    1 => "My first line",
+    2 => "My second line"
+];
+$api->setLines(Player, $lines, int);
 ```
 
 ## You can get the text that is located in the line of the scoreboard of the player you entered the function
 ```php
-ScoreBoardAPI::getLineScore(Player, $line;
+$api->getLineScore(Player, $line);
 ```
 ## To edit a line
 https://www.php.net/manual/fr/function.str-replace.php
 ```PHP
-ScoreBoardAPI::editLineScore(Player, $line, $replace, $subject);
+$api->editLineScore(Player, $line, $replace, $subject);
 ```
 
 ## To delete a single ligne
 ```PHP
-ScoreBoardAPI::removeLine(Player, $line);
+$api->removeLine(Player, $line);
 ```
 
 ## To check if the player has a scoreboard
 ```PHP
-ScoreBoardAPI::hasScore(Player)
+$api->hasScore(Player)
 ```
 
 ## To remove the player's scoreboard
 ```PHP
-ScoreBoardAPI::removeScore($player);
+$api->removeScore($player);
 ```
 
 ## There you go! you can now create in any circumstance and modify scoreboards to the player
