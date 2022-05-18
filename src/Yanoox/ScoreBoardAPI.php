@@ -11,37 +11,36 @@ APIs name: ScoreBoardAPI
 Author: Yanoox
 Plugin's api: 4.0.0
 For: everybody :)
-
+edited by: Nathan45
  */
-namespace Yanoox\Utils\ScoreboardAPI;
+namespace Nathan45\Tournament\Utils;
 
 use BadFunctionCallException;
 use OutOfBoundsException;
-use pocketmine\entity\effect\EffectInstance;
-use pocketmine\entity\effect\VanillaEffects;
-use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\network\mcpe\protocol\RemoveObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetScorePacket;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use pocketmine\player\Player;
+use pocketmine\utils\SingletonTrait;
 
-class ScoreBoardAPI implements Listener {
+class ScoreBoardAPI{
+
+    use SingletonTrait;
 
     /**
      * Contains the scoreboard of the players
      *
      * @var string[]
      */
-    public static array $scoreboards = [];
+    public array $scoreboards = [];
 
     /**
      * Contains strings containing in each line the player's score (if he has one)
      *
      * @var string[]
      */
-    public static array $lineScore = [];
+    public array $lineScore = [];
 
     /**
      * Add a scoreboard to player, this option is mandatory: you can't set a score to a player without a scoreboard
@@ -54,10 +53,11 @@ class ScoreBoardAPI implements Listener {
      * @param string $criteriaName
      * @return void
      */
-    public static function sendScore(Player $player, string $displayName, int $slotOrder = SetDisplayObjectivePacket::SORT_ORDER_ASCENDING, string $displaySlot = SetDisplayObjectivePacket::DISPLAY_SLOT_SIDEBAR, string $objectiveName = "objective", string $criteriaName = "dummy"): void{
+    public function sendScore(Player $player, string $displayName, int $slotOrder = SetDisplayObjectivePacket::SORT_ORDER_ASCENDING, string $displaySlot = SetDisplayObjectivePacket::DISPLAY_SLOT_SIDEBAR, string $objectiveName = "objective", string $criteriaName = "dummy"): void{
         if ($player->isConnected()) {
-            if (self::hasScore($player)) {
-                self::removeScore($player);
+
+            if ($this->hasScore($player)) {
+                $this->removeScore($player);
             }
 
             $packet = new SetDisplayObjectivePacket();
@@ -68,11 +68,10 @@ class ScoreBoardAPI implements Listener {
             $packet->sortOrder = $slotOrder;
             $player->getNetworkSession()->sendDataPacket($packet);
 
-            self::$scoreboards[mb_strtolower($player->getName())] = $objectiveName;
-            self::$lineScore[mb_strtolower($player->getName())][0] = $objectiveName;
+            $this->scoreboards[mb_strtolower($player->getName())] = $objectiveName;
+            $this->lineScore[mb_strtolower($player->getName())][0] = $objectiveName;
         }
     }
-
 
     /**
      * Sets a line to the player's score
@@ -83,18 +82,18 @@ class ScoreBoardAPI implements Listener {
      * @param int $type
      * @return void
      */
-    public static function setScoreLine(Player $player, int $line, string $message, int $type = ScorePacketEntry::TYPE_FAKE_PLAYER): void{
+    public function setScoreLine(Player $player, int $line, string $message, int $type = ScorePacketEntry::TYPE_FAKE_PLAYER): void{
         if ($player->isConnected()) {
-            if (!self::hasScore($player)) {
+            if (!$this->hasScore($player)) {
                 throw new BadFunctionCallException("Cannot set the line : the player's scoreboard has not been found");
             }
 
-            if (self::isNotLineValid($line)) {
+            if ($this->isNotLineValid($line)) {
                 throw new OutOfBoundsException("$line isn't between 1 and 15");
             }
 
             $entry = new ScorePacketEntry;
-            $entry->objectiveName = self::$scoreboards[mb_strtolower($player->getName())] ?? "objective";
+            $entry->objectiveName = $this->scoreboards[mb_strtolower($player->getName())] ?? "objective";
             $entry->type = $type;
             $entry->customName = $message;
             $entry->score = $line;
@@ -105,7 +104,7 @@ class ScoreBoardAPI implements Listener {
             $packet->entries[] = $entry;
             $player->getNetworkSession()->sendDataPacket($packet);
 
-            self::$lineScore[mb_strtolower($player->getName())][$line] = $message;
+            $this->lineScore[mb_strtolower($player->getName())][$line] = $message;
         }
     }
 
@@ -116,12 +115,12 @@ class ScoreBoardAPI implements Listener {
      * @param int $line
      * @return string
      */
-    public static function getLineScore(Player $player, int $line) : string{
+    public function getLineScore(Player $player, int $line) : string{
         if ($player->isConnected()) {
-            if (!self::hasScore($player)) {
+            if (!$this->hasScore($player)) {
                 throw new BadFunctionCallException("Cannot get the line : the player's scoreboard has not been found");
             }
-            return self::$lineScore[mb_strtolower($player->getName())][$line];
+            return $this->lineScore[mb_strtolower($player->getName())][$line];
         }
         return false;
     }
@@ -133,21 +132,21 @@ class ScoreBoardAPI implements Listener {
      * @param string|float $replace
      * @return void
      */
-    public static function editScoreLine(Player $player, int $line, string|float $search, string|float $replace)
+    public function editScoreLine(Player $player, int $line, string|float $search, string|float $replace)
     {
         if ($player->isConnected()) {
-            if (!self::hasScore($player)) {
+            if (!$this->hasScore($player)) {
                 throw new BadFunctionCallException("Cannot edit the line : the player's scoreboard has not been found");
             }
-            if (self::isNotLineValid($line)) {
+            if ($this->isNotLineValid($line)) {
                 throw new OutOfBoundsException("$line isn't between 1 and 15");
             }
 
-            self::removeLine($player, $line);
+            $this->removeLine($player, $line);
 
             $entry = new ScorePacketEntry();
-            $entry->objectiveName = self::$scoreboards[mb_strtolower($player->getName())] ?? "objective";
-            $entry->customName = str_replace($search, $replace, self::getLineScore($player, $line));
+            $entry->objectiveName = $this->scoreboards[mb_strtolower($player->getName())] ?? "objective";
+            $entry->customName = str_replace($search, $replace, $this->getLineScore($player, $line));
             $entry->score = $line;
             $entry->scoreboardId = $line;
             $entry->type = $entry::TYPE_FAKE_PLAYER;
@@ -157,7 +156,7 @@ class ScoreBoardAPI implements Listener {
             $packet->entries[] = $entry;
             $player->getNetworkSession()->sendDataPacket($packet);
 
-            self::$lineScore[mb_strtolower($player->getName())][$line] = str_replace($search, $replace, self::getLineScore($player, $line));
+            $this->lineScore[mb_strtolower($player->getName())][$line] = str_replace($search, $replace, $this->getLineScore($player, $line));
         }
     }
 
@@ -168,16 +167,16 @@ class ScoreBoardAPI implements Listener {
      * @param int $line
      * @return void
      */
-    public static function removeLine(Player $player, int $line) : void{
+    public function removeLine(Player $player, int $line) : void{
         if ($player->isConnected()) {
             $packet = new SetScorePacket();
             $packet->type = SetScorePacket::TYPE_REMOVE;
 
             $entry = new ScorePacketEntry();
-            $entry->objectiveName = self::$scoreboards[mb_strtolower($player->getName())] ?? "objective";
+            $entry->objectiveName = $this->scoreboards[mb_strtolower($player->getName())] ?? "objective";
             $entry->score = $line;
             $entry->scoreboardId = $line;
-            $entry->customName = self::getLineScore($player, $line);
+            $entry->customName = $this->getLineScore($player, $line);
             $packet->entries[] = $entry;
 
             $player->getNetworkSession()->sendDataPacket($packet);
@@ -191,16 +190,16 @@ class ScoreBoardAPI implements Listener {
      * @param Player $player
      * @return void
      */
-    public static function removeScore(Player $player): void{
-        if ($player->isConnected() && self::hasScore($player)) {
-            $objectiveName = self::$scoreboards[mb_strtolower($player->getName())] ?? "objective";
+    public function removeScore(Player $player): void{
+        if ($player->isConnected() && $this->hasScore($player)) {
+            $objectiveName = $this->scoreboards[mb_strtolower($player->getName())] ?? "objective";
 
             $packet = new RemoveObjectivePacket();
             $packet->objectiveName = $objectiveName;
             $player->getNetworkSession()->sendDataPacket($packet);
 
-            unset(self::$scoreboards[mb_strtolower($player->getName())]);
-            unset(self::$lineScore[mb_strtolower($player->getName())]);
+            unset($this->scoreboards[mb_strtolower($player->getName())]);
+            unset($this->lineScore[mb_strtolower($player->getName())]);
         }
     }
 
@@ -210,18 +209,18 @@ class ScoreBoardAPI implements Listener {
      * @param Player $player
      * @return bool
      */
-    public static function hasScore(Player $player): bool{
-        return isset(self::$scoreboards[mb_strtolower($player->getName())]);
+    public function hasScore(Player $player): bool{
+        return isset($this->scoreboards[mb_strtolower($player->getName())]);
     }
 
-    public static function isNotLineValid(int $line): bool
-    {
-        return $line < 1 || $line > 15;
-    }
-
-    public function onQuit(PlayerQuitEvent $ev){
-        if (self::hasScore($ev->getPlayer())){
-            self::removeScore($ev->getPlayer());
+    public function setLines(Player $player, array $lines, int $type = ScorePacketEntry::TYPE_FAKE_PLAYER): void{
+        foreach ($lines as $line => $message) {
+            $this->setScoreLine($player, $line, $message, $type);
         }
+    }
+
+    public function isNotLineValid(int $line): bool
+    {
+        return $line < 0 || $line > 15;
     }
 }
