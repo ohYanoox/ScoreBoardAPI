@@ -3,6 +3,7 @@
 
 ## SETUP
 **Only put the api in the src of your plugin and use it :)**
+
 You will find an example in \yanoox\Example.php
 
 ## Get an instance of your api
