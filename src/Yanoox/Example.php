@@ -42,4 +42,4 @@ class Example extends PluginBase implements Listener
                 break;
         }
     }
-]
+}
